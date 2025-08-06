@@ -1,0 +1,23 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+
+# Model files (large)
+models/
+*.pt
+*.bin
+*.ckpt
+
+# FAISS indices
+faiss_index/
+faiss_multi_index/
+
+# PDFs (optional)
+*.pdf
+
+# Virtual environments
+venv/
+.env/
+rag-env/
+
