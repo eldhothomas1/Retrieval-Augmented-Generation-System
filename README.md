@@ -1,74 +1,74 @@
-# 🧠 AI Document Summarizer + QA System
+# Retrieval-Augmented Generation System
 
-This project is an interactive AI-powered summarization and question-answering system built with:
+A local RAG pipeline for document summarization and Q&A, built with:
 
- Retrieval-Augmented Generation (RAG)
- Hugging Face Transformers & SentenceTransformers
- FAISS vector indexing
- Qwen1.5-1.8B language model (locally loaded)
- Flask web interface
+- Retrieval-Augmented Generation (RAG)
+- Hugging Face Transformers & SentenceTransformers
+- FAISS vector indexing
+- Qwen1.5-1.8B language model (locally loaded)
+- Flask web interface
 
-The system allows users to upload and process documents (PDFs), generate summaries, and ask questions based on the content. Designed for local use without relying on external APIs or internet access during runtime.
+Upload PDF documents, generate summaries, and ask questions based on their content — designed to run locally without external APIs.
 
----
+## Features
 
-##  Features
-
- Summarize multiple PDF documents  
- Answer questions based on indexed content  
- FAISS-powered semantic search  
- Clean Flask-based web UI  
- Local model loading (no API needed)  
- Optimized for low-GPU-memory systems (4-bit quantization supported)
-
----
+- Summarize multiple PDF documents
+- Answer questions based on indexed content
+- FAISS-powered semantic search
+- Clean Flask-based web UI
+- Local model loading (no API needed)
+- Optimized for low-GPU-memory systems (4-bit quantization supported)
 
 ## Project Structure
 
-├── AIConversionTest.py # Core logic: document parsing, embedding, QA
-├── app.py # Flask web server
-├── templates/ # HTML templates for the UI
-├── notebooks/ # Optional experimentation notebooks
-├── requirements.txt # Python dependencies
-├── .gitignore # Prevents large files from being pushed
+```
+├── rag_pipeline.py     # Core logic: document parsing, embedding, QA
+├── app.py              # Flask web server
+├── templates/           # HTML templates for the UI
+├── requirements.txt     # Python dependencies
+├── .gitignore
 └── README.md
+```
 
-
----
-
-## 💻 Installation & Setup
+## Installation & Setup
 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/eldhothomas1/YOUR_REPO_NAME.git
-cd YOUR_REPO_NAME
+git clone https://github.com/eldhothomas1/Retrieval-Augmented-Generation-System.git
+cd Retrieval-Augmented-Generation-System
+```
 
-### 2. Install Dependencies
+### 2. Install dependencies
 
+```bash
 pip install -r requirements.txt
+```
 
-### 3. Model Setup (Qwen1.5-1.8B)
+### 3. Model setup (Qwen1.5-1.8B)
 
-This project uses the Qwen/Qwen1.5-1.8B model from Hugging Face.
-Due to its large size, it is excluded from the repository.
+This project uses the Qwen/Qwen1.5-1.8B model from Hugging Face. Due to its size, it's excluded from the repo — download it manually:
 
-You must manually download and place the model into the models/ directory before running the app.
-
+```bash
 mkdir -p models/Qwen1.5-1.8B
 git lfs install
 git clone https://huggingface.co/Qwen/Qwen1.5-1.8B models/Qwen1.5-1.8B
+```
 
-FILES NOT INCLUDED:
+### 4. Run the app
 
-To keep the repo clean and lightweight, the following are excluded using .gitignore:
-models/ (all language models)
-Any .pdf files
-.pyc, __pycache__, .ipynb_checkpoints, etc.
-FAISS indexes (faiss_index/, faiss_multi_index/)
-Make sure to recreate your own models and FAISS index locally as needed.
+```bash
+python app.py
+```
 
-HOW TO RUN:
+Then go to `http://127.0.0.1:5000`
 
-1. python app.py
-2. Go to: http://127.0.0.1:5000
+## Files Not Included
+
+To keep the repo lightweight, the following are excluded via `.gitignore`:
+- `models/` (language models)
+- `*.pdf` files
+- `__pycache__/`, `*.pyc`, `.ipynb_checkpoints/`
+- FAISS indexes (`faiss_index/`, `faiss_multi_index/`)
+
+You'll need to regenerate these locally.
