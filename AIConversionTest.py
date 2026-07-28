@@ -159,7 +159,7 @@ class RAGSystem:
             with torch.no_grad():
                 output = self.model.generate(
                     input_ids,
-                    max_new_tokens=1000,  # ✅ Try increasing this value for longer summaries
+                    max_new_tokens=1000,
                     do_sample=False,
                     temperature=0.7,
                     top_k=50
