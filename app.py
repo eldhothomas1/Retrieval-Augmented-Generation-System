@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from AIConversionTest import get_rag_instance
+from rag_pipeline import get_rag_instance
 
 app = Flask(__name__)
 rag = get_rag_instance()
