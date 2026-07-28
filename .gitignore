@@ -1,23 +1,20 @@
-# Byte-compiled / optimized / DLL files
+# Python
 __pycache__/
-*.py[cod]
-*.so
+*.pyc
+*.pyo
+.ipynb_checkpoints/
 
-# Model files (large)
+# Models & data
 models/
-*.pt
-*.bin
-*.ckpt
-
-# FAISS indices
+*.pdf
 faiss_index/
 faiss_multi_index/
 
-# PDFs
-*.pdf
-
-# Virtual environments
+# Environments
 venv/
-.env/
-rag-env/
+.venv/
+env/
+.env
 
+# OS files
+.DS_Store
