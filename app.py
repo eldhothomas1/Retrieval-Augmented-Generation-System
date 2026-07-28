@@ -3,7 +3,7 @@ from AIConversionTest import get_rag_instance
 
 app = Flask(__name__)
 rag = get_rag_instance()
-rag.load_documents_from_folder("docs")  # your folder with PDFs
+rag.load_documents_from_folder("docs")  #folder with PDFs
 #rag.chunk_documents()
 rag.embed_chunks()
 
