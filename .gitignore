@@ -13,7 +13,7 @@ models/
 faiss_index/
 faiss_multi_index/
 
-# PDFs (optional)
+# PDFs
 *.pdf
 
 # Virtual environments
