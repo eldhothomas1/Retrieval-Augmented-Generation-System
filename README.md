@@ -17,18 +17,7 @@ Built with Python, Flask, SentenceTransformers, FAISS, Hugging Face Transformers
 
 ## Architecture
 
-~~~mermaid
-flowchart TD
-    A["PDF uploads"] --> B["Text + page metadata"]
-    B --> C["Overlapping chunks"]
-    C --> D["SentenceTransformer embeddings"]
-    D --> E["Normalized FAISS index"]
-    Q["User question"] --> F["Query embedding"]
-    F --> E
-    E --> G["Top-k passages"]
-    G --> H["Local Qwen model"]
-    H --> I["Answer + source excerpts"]
-~~~
+![PDF question answering pipeline](docs/architecture.svg)
 
 The embedding vectors are L2-normalized before being stored in a FAISS inner-product index. This makes the inner product equivalent to cosine similarity and keeps retrieval fast without discarding document provenance.
 
@@ -134,7 +123,7 @@ python app.py
 The test suite uses dependency injection and lightweight fakes, so it validates ingestion, chunking, retrieval, Flask routes, and error handling without downloading an LLM.
 
 ~~~bash
-pip install -r requirements-dev.txt
+pip install -r requirements.txt
 python -m pytest -q
 ruff check .
 ~~~
@@ -146,6 +135,7 @@ GitHub Actions runs the same model-free checks on every push and pull request.
 ~~~text
 .
 ├── .github/workflows/test.yml  # Continuous integration
+├── docs/architecture.svg       # Static pipeline diagram
 ├── static/styles.css           # Responsive interface styles
 ├── templates/index.html        # Flask/Jinja interface
 ├── tests/
@@ -154,7 +144,6 @@ GitHub Actions runs the same model-free checks on every push and pull request.
 ├── .env.example                # Configuration reference
 ├── app.py                      # Web routes and application factory
 ├── rag_pipeline.py             # RAG ingestion, retrieval, and generation
-├── requirements-dev.txt
 └── requirements.txt
 ~~~
 

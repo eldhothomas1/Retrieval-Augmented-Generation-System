@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">PDF question answering pipeline</title>
+  <desc id="desc">PDF files are parsed, split into chunks, embedded, indexed with FAISS, retrieved for a question, and passed to a local Qwen model to produce an answer with sources.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#0b6b50"/>
+    </marker>
+    <style>
+      .box { fill: #fffef9; stroke: #aab8b2; stroke-width: 2; }
+      .accent { fill: #e6f1ec; stroke: #0b6b50; }
+      .label { fill: #15201d; font: 600 18px Arial, sans-serif; text-anchor: middle; }
+      .small { fill: #65716d; font: 15px Arial, sans-serif; text-anchor: middle; }
+      .arrow { fill: none; stroke: #0b6b50; stroke-width: 3; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect width="1200" height="420" rx="22" fill="#f4f3ed"/>
+
+  <rect class="box" x="50" y="70" width="180" height="90" rx="14"/>
+  <text class="label" x="140" y="108">PDF uploads</text>
+  <text class="small" x="140" y="135">files and pages</text>
+
+  <rect class="box" x="280" y="70" width="180" height="90" rx="14"/>
+  <text class="label" x="370" y="108">Text chunks</text>
+  <text class="small" x="370" y="135">with page details</text>
+
+  <rect class="box" x="510" y="70" width="180" height="90" rx="14"/>
+  <text class="label" x="600" y="108">Embeddings</text>
+  <text class="small" x="600" y="135">SentenceTransformer</text>
+
+  <rect class="accent" x="740" y="70" width="180" height="90" rx="14"/>
+  <text class="label" x="830" y="108">FAISS index</text>
+  <text class="small" x="830" y="135">similarity search</text>
+
+  <path class="arrow" d="M 230 115 L 272 115"/>
+  <path class="arrow" d="M 460 115 L 502 115"/>
+  <path class="arrow" d="M 690 115 L 732 115"/>
+
+  <rect class="box" x="280" y="265" width="180" height="90" rx="14"/>
+  <text class="label" x="370" y="303">Question</text>
+  <text class="small" x="370" y="330">embedded for search</text>
+
+  <rect class="box" x="510" y="265" width="180" height="90" rx="14"/>
+  <text class="label" x="600" y="303">Top matches</text>
+  <text class="small" x="600" y="330">retrieved passages</text>
+
+  <rect class="box" x="740" y="265" width="180" height="90" rx="14"/>
+  <text class="label" x="830" y="303">Local Qwen model</text>
+  <text class="small" x="830" y="330">grounded response</text>
+
+  <rect class="accent" x="970" y="265" width="180" height="90" rx="14"/>
+  <text class="label" x="1060" y="303">Answer</text>
+  <text class="small" x="1060" y="330">with source pages</text>
+
+  <path class="arrow" d="M 460 310 L 502 310"/>
+  <path class="arrow" d="M 690 310 L 732 310"/>
+  <path class="arrow" d="M 920 310 L 962 310"/>
+  <path class="arrow" d="M 830 160 L 830 215 L 600 215 L 600 257"/>
+</svg>
