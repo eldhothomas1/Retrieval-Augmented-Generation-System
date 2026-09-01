@@ -1,134 +1,115 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Document QA System</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #eef2f7;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
-
-        header {
-            background-color: #3498db;
-            color: white;
-            padding: 30px 20px;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 2.5em;
-        }
-
-        header p {
-            margin-top: 10px;
-            font-size: 1.1em;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
-        section {
-            background: white;
-            padding: 25px;
-            margin-bottom: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-
-        section h2 {
-            margin-top: 0;
-            color: #2c3e50;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            margin-top: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        button {
-            padding: 12px 25px;
-            background-color: #2ecc71;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #27ae60;
-        }
-
-        .output {
-            background-color: #f9f9f9;
-            border-left: 4px solid #3498db;
-            padding: 15px 20px;
-            border-radius: 6px;
-            white-space: pre-wrap;
-        }
-
-        footer {
-            text-align: center;
-            padding: 15px;
-            background-color: #dfe6e9;
-            color: #7f8c8d;
-            font-size: 14px;
-            margin-top: 60px;
-        }
-    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Local PDF RAG Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+    <main class="shell">
+        <header class="hero">
+            <div>
+                <p class="eyebrow">LOCAL DOCUMENT INTELLIGENCE</p>
+                <h1>Ask better questions of your PDFs.</h1>
+                <p class="lede">
+                    Private, local retrieval with inspectable source passages.
+                    Your documents never need to leave your machine.
+                </p>
+            </div>
+            <div class="status-card" aria-label="Index status">
+                <span class="status-dot {% if rag.ready %}ready{% endif %}"></span>
+                <div>
+                    <strong>{% if rag.ready %}Index ready{% else %}Waiting for PDFs{% endif %}</strong>
+                    <p>{{ rag.document_count }} documents · {{ rag.page_count }} pages · {{ rag.chunk_count }} chunks</p>
+                </div>
+            </div>
+        </header>
 
-    <header>
-        <h1>Document QA + Summarization System</h1>
-        <p>Ask questions or get summaries from your uploaded PDFs</p>
-    </header>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="notice {{ category }}" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
 
-    <div class="container">
-        <section>
-            <h2>Ask a Question</h2>
-            <form method="post">
-                <input type="text" name="query" placeholder="Enter your question here" required>
-                <button type="submit">Ask</button>
+        <section class="panel upload-panel">
+            <div>
+                <p class="step">01 · BUILD THE INDEX</p>
+                <h2>Choose your documents</h2>
+                <p>Upload text-based PDFs. A new upload replaces the current in-memory index.</p>
+            </div>
+            <form action="{{ url_for('upload_documents') }}" method="post" enctype="multipart/form-data">
+                <label class="file-picker">
+                    <span>Select PDFs</span>
+                    <input type="file" name="documents" accept=".pdf,application/pdf" multiple required>
+                </label>
+                <button type="submit">Index documents</button>
             </form>
-            {% if answer %}
-                <h3>Answer:</h3>
-                <div class="output">{{ answer }}</div>
-            {% endif %}
         </section>
 
-        <section>
-            <h2>Summarize All Documents</h2>
-            <form method="post">
-                <input type="hidden" name="summarize" value="1">
-                <button type="submit">Summarize</button>
+        <div class="workspace">
+            <section class="panel">
+                <p class="step">02 · RETRIEVE + ANSWER</p>
+                <h2>Ask a grounded question</h2>
+                <form action="{{ url_for('ask') }}" method="post">
+                    <label for="query" class="sr-only">Question</label>
+                    <textarea id="query" name="query" rows="3"
+                        placeholder="What does the document say about…?" required>{{ query or "" }}</textarea>
+                    <button type="submit" {% if not rag.ready %}disabled{% endif %}>Ask the documents</button>
+                </form>
+
+                {% if answer %}
+                    <article class="answer">
+                        <p class="result-label">ANSWER</p>
+                        <p>{{ answer }}</p>
+                    </article>
+                {% endif %}
+            </section>
+
+            <aside class="panel sources-panel">
+                <div class="section-heading">
+                    <div>
+                        <p class="step">EVIDENCE</p>
+                        <h2>Retrieved sources</h2>
+                    </div>
+                    {% if sources %}<span class="count">{{ sources|length }}</span>{% endif %}
+                </div>
+                {% if sources %}
+                    <ol class="sources">
+                        {% for result in sources %}
+                            <li>
+                                <div class="source-meta">
+                                    <strong>{{ result.chunk.source }}</strong>
+                                    <span>Page {{ result.chunk.page_number }}</span>
+                                </div>
+                                <p>{{ result.chunk.text }}</p>
+                            </li>
+                        {% endfor %}
+                    </ol>
+                {% else %}
+                    <p class="empty-state">Supporting passages will appear here with filename and page details.</p>
+                {% endif %}
+            </aside>
+        </div>
+
+        <section class="panel summary-panel">
+            <div>
+                <p class="step">03 · DOCUMENT OVERVIEW</p>
+                <h2>Generate a concise summary</h2>
+            </div>
+            <form action="{{ url_for('summarize') }}" method="post">
+                <button class="secondary" type="submit" {% if not rag.ready %}disabled{% endif %}>
+                    Summarize index
+                </button>
             </form>
             {% if summary %}
-                <h3>Summary:</h3>
-                <div class="output">{{ summary }}</div>
+                <article class="answer summary"><p>{{ summary }}</p></article>
             {% endif %}
         </section>
-    </div>
 
-    <footer>
-        &copy; 2025 Document Intelligence System • Built with Flask + Transformers
-    </footer>
-
+        <footer>
+            Built with Flask, SentenceTransformers, FAISS, and Qwen · Local inference, no API key
+        </footer>
+    </main>
 </body>
 </html>
-
