@@ -6,3 +6,5 @@ sentence-transformers>=3.0,<6
 torch>=2.2
 transformers>=4.51,<5
 accelerate>=1.0,<2
+pytest>=8,<9
+ruff>=0.9,<1
