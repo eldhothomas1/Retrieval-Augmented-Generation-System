@@ -135,7 +135,7 @@ The test suite uses dependency injection and lightweight fakes, so it validates 
 
 ~~~bash
 pip install -r requirements-dev.txt
-pytest -q
+python -m pytest -q
 ruff check .
 ~~~
 
