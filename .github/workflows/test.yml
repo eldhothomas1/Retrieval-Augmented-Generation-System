@@ -17,7 +17,7 @@ jobs:
           python-version: "3.11"
           cache: pip
       - name: Install model-free test dependencies
-        run: pip install Flask numpy pypdf -r requirements-dev.txt
+        run: pip install Flask numpy pypdf pytest ruff
       - name: Lint
         run: ruff check .
       - name: Test
